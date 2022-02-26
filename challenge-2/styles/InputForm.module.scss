@@ -1,0 +1,22 @@
+.form {
+  padding: 1rem;
+  border: 1px solid #d4d4d4;
+  border-radius: 5px;
+  width: 200px;
+  box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+}
+
+.greenBtn {
+  border-radius: 8px;
+  padding: 10px 15px;
+  background-color: #2cb2aa;
+  border: none;
+  color: white;
+  box-shadow: 7px 6px 28px 1px rgba(0, 0, 0, 0.24);
+  cursor: pointer;
+  outline: none;
+  transition: 0.2s all;
+  &:active {
+    transform: scale(0.95);
+  }
+}
