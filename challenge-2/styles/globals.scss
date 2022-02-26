@@ -28,3 +28,21 @@ a {
     margin-top: 0.3rem;
   }
 }
+
+.flex {
+  display: flex;
+}
+.justify-around {
+  justify-content: space-around;
+}
+.text-center {
+  text-align: center;
+}
+.mobile-column {
+  @media screen and (max-width: 600px) {
+    flex-direction: column;
+    button {
+      margin: 0.3rem 0;
+    }
+  }
+}

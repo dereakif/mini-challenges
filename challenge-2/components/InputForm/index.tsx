@@ -1,23 +1,43 @@
 import { ChangeEvent, Dispatch, FormEvent, SetStateAction } from "react";
-import { UserInfo } from "../../interfaces/user.interfaces";
+import { UserInfo, UserInfoBase } from "../../interfaces/user.interfaces";
 import styles from "../../styles/InputForm.module.scss";
+import { v4 as uuidv4 } from "uuid";
 
 type Props = {
   input: UserInfo;
   setInput: Dispatch<SetStateAction<UserInfo>>;
+  users: UserInfo[];
   setUsers: Dispatch<SetStateAction<UserInfo[]>>;
-  errors: UserInfo;
-  setErrors: Dispatch<SetStateAction<UserInfo>>;
+  errors: UserInfoBase;
+  setErrors: Dispatch<SetStateAction<UserInfoBase>>;
+  editingId: string | null;
+  setEditingId: Dispatch<SetStateAction<string | null>>;
 };
 
-function InputForm({ input, setInput, setUsers, errors, setErrors }: Props) {
+function InputForm({
+  input,
+  setInput,
+  setUsers,
+  users,
+  errors,
+  setErrors,
+  editingId,
+  setEditingId,
+}: Props) {
   const validatePhoneNumber = (phoneNumber: string) => {
     let validity = true;
     let error = "";
+
     if (phoneNumber.length !== 10) {
       validity = false;
       error = "Telefon numarası 10 haneli olmalıdır.";
     }
+    const userToCheck = users.find((user) => user.phone === phoneNumber);
+    if (userToCheck?.id !== editingId && userToCheck?.phone === phoneNumber) {
+      validity = false;
+      error = "Bu telefon numarası daha önce kullanılmış.";
+    }
+
     return { validity, error };
   };
 
@@ -30,7 +50,7 @@ function InputForm({ input, setInput, setUsers, errors, setErrors }: Props) {
       error = "Bu alan boş bırakılamaz.";
       return { validity, error };
     }
-    if (!name.match(/^[a-zA-Z]+$/)) {
+    if (!name.match(/^[a-zA-ZığüşöçİĞÜŞÖÇ ]+$/)) {
       validity = false;
       error = "Bu alan sadece harflerden oluşmalıdır.";
       return { validity, error };
@@ -41,6 +61,7 @@ function InputForm({ input, setInput, setUsers, errors, setErrors }: Props) {
   const validateForm = () => {
     let formIsValid = true;
     Object.keys(input).forEach((key) => {
+      if (key === "id") return;
       if (key === "phone") {
         const { validity, error } = validatePhoneNumber(input[key]);
         if (!validity) {
@@ -65,14 +86,26 @@ function InputForm({ input, setInput, setUsers, errors, setErrors }: Props) {
         }
       }
     });
+
     return formIsValid;
   };
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (validateForm()) {
-      setUsers((s) => [...s, input]);
-      setInput({ firstName: "", lastName: "", phone: "" });
+      const userToAdd = { ...input, id: uuidv4() };
+      if (editingId) {
+        const userIndex = users.findIndex((user) => user.id === editingId);
+        if (userIndex !== -1) {
+          const newUsers = [...users];
+          newUsers[userIndex] = userToAdd;
+          setUsers(newUsers);
+        }
+      } else {
+        setUsers((s) => [...s, userToAdd]);
+      }
+      setEditingId(null);
+      setInput({ id: "", firstName: "", lastName: "", phone: "" });
     }
   };
 
@@ -115,7 +148,7 @@ function InputForm({ input, setInput, setUsers, errors, setErrors }: Props) {
         {errors.phone && <span>{errors.phone}</span>}
       </div>
       <button className={styles.greenBtn} type="submit">
-        Ekle
+        {editingId ? "Kaydet" : "Ekle"}
       </button>
     </form>
   );

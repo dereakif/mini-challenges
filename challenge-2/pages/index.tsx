@@ -3,17 +3,18 @@ import Head from "next/head";
 import { useState } from "react";
 import InputForm from "../components/InputForm";
 import UserTable from "../components/UserTable";
-import { UserInfo } from "../interfaces/user.interfaces";
+import { UserInfo, UserInfoBase } from "../interfaces/user.interfaces";
 import styles from "../styles/Home.module.scss";
-const emptyState: UserInfo = {
+const emptyState: UserInfoBase = {
   firstName: "",
   lastName: "",
   phone: "",
 };
 const Home: NextPage = () => {
   const [users, setUsers] = useState<UserInfo[]>([]);
-  const [input, setInput] = useState<UserInfo>(emptyState);
-  const [errors, setErrors] = useState<UserInfo>(emptyState);
+  const [input, setInput] = useState<UserInfo>({ id: "", ...emptyState });
+  const [errors, setErrors] = useState<UserInfoBase>(emptyState);
+  const [editingId, setEditingId] = useState<null | string>(null);
   return (
     <div className={styles.container}>
       <Head>
@@ -23,11 +24,21 @@ const Home: NextPage = () => {
       <InputForm
         input={input}
         setInput={setInput}
+        users={users}
         setUsers={setUsers}
         errors={errors}
         setErrors={setErrors}
+        editingId={editingId}
+        setEditingId={setEditingId}
       />
-      <UserTable users={users} />
+      <UserTable
+        users={users}
+        setInput={setInput}
+        setEditingId={setEditingId}
+        setErrors={setErrors}
+        emptyState={emptyState}
+        setUsers={setUsers}
+      />
     </div>
   );
 };

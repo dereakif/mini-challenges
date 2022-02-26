@@ -2,8 +2,12 @@
   padding: 1rem;
   border: 1px solid #d4d4d4;
   border-radius: 5px;
-  width: 200px;
+  width: 250px;
   box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+  @media screen and (max-width: 600px) {
+    margin-top: 1rem;
+    width: 100%;
+  }
 }
 
 .greenBtn {

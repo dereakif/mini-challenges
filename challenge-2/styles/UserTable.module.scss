@@ -1,0 +1,29 @@
+.styledTable {
+  margin-top: 3rem;
+  width: 100%;
+  background-color: #ffffff;
+  border-collapse: collapse;
+  border-width: 2px;
+  border-color: #000000;
+  border-style: solid;
+  color: #000000;
+  td,
+  th {
+    border-width: 2px;
+    border-color: #000000;
+    border-style: solid;
+    padding: 3px;
+  }
+  td {
+    text-align: center;
+  }
+  thead {
+    background-color: #ffffff;
+  }
+  tbody > tr > td.button-container {
+    background-color: red;
+    @media screen and (max-width: 600px) {
+      flex-direction: column;
+    }
+  }
+}
