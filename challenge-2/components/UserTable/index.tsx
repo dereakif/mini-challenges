@@ -1,3 +1,4 @@
+import Image from "next/image";
 import { Dispatch, SetStateAction, useState } from "react";
 import { UserInfo, UserInfoBase } from "../../interfaces/user.interfaces";
 import styles from "../../styles/UserTable.module.scss";
@@ -32,6 +33,7 @@ const UserTable = ({
   setUsers,
 }: Props) => {
   const [dropdownValue, setDropdownValue] = useState(options[0].value);
+  const [nameFilter, setNameFilter] = useState("");
 
   const phoneFormat = (input: string) => {
     return input.replace(/(\d{3})(\d{3})(\d{2})(\d{2})/, "$1 $2 $3 $4");
@@ -81,10 +83,27 @@ const UserTable = ({
       <thead>
         <tr>
           <th colSpan={3}>
-            <div>arama</div>
+            <div className="flex align-center justify-center">
+              <input
+                type="text"
+                placeholder="Ad ve soyada giriniz."
+                value={nameFilter}
+                onChange={(e) => setNameFilter(e.target.value)}
+              />
+              <button className={styles.searchBtn}>
+                <div className="flex align-center cursor-pointer">
+                  <Image
+                    alt="magnifying-glass"
+                    src="/magnifying-glass.svg"
+                    height={20}
+                    width={20}
+                  />
+                  <span>Ara</span>
+                </div>
+              </button>
+            </div>
           </th>
           <th colSpan={1}>
-            {/* <label>Sırala </label> */}
             <select
               value={dropdownValue}
               onChange={(e) => {
@@ -109,6 +128,11 @@ const UserTable = ({
       <tbody>
         {users
           .sort((a, b) => handleSort(a, b))
+          .filter(
+            (item) =>
+              item.firstName.toLowerCase().includes(nameFilter.toLowerCase()) ||
+              item.lastName.toLowerCase().includes(nameFilter.toLowerCase())
+          )
           .map((user) => (
             <tr key={user.phone}>
               <td>{toTitleCase(user.firstName)}</td>
@@ -116,8 +140,22 @@ const UserTable = ({
               <td>+90 {phoneFormat(user.phone)}</td>
               <td>
                 <div className="flex justify-around mobile-column">
-                  <button onClick={() => handleEdit(user)}>duzenle</button>
-                  <button onClick={() => handleDelete(user.id)}>sil</button>
+                  <Image
+                    onClick={() => handleEdit(user)}
+                    src="/edit.svg"
+                    alt="edit"
+                    width={20}
+                    height={20}
+                    className="cursor-pointer"
+                  />
+                  <Image
+                    onClick={() => handleDelete(user.id)}
+                    src="/remove.svg"
+                    alt="remove"
+                    width={20}
+                    height={20}
+                    className="cursor-pointer"
+                  />
                 </div>
               </td>
             </tr>

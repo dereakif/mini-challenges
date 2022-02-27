@@ -35,6 +35,12 @@ a {
 .justify-around {
   justify-content: space-around;
 }
+.justify-center {
+  justify-content: center;
+}
+.align-center {
+  align-items: center;
+}
 .text-center {
   text-align: center;
 }
@@ -45,4 +51,7 @@ a {
       margin: 0.3rem 0;
     }
   }
+}
+.cursor-pointer {
+  cursor: pointer;
 }
